@@ -1,4 +1,5 @@
-fetch("http://localhost:3000/api/bookings")
+fetch("https://heavenkids-api.onrender.com/api/gallery")
+
   .then(res => res.json())
   .then(data => {
     const list = document.getElementById("list");

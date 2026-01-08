@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+</head>
+<script>
+if (!localStorage.getItem("admin")) {
+  window.location.href = "admin-login.html";
+}
+</script>
+
+<body>
+
+<h1>📋 Bookings</h1>
+<ul id="list"></ul>
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout() {
+  localStorage.removeItem("admin");
+  window.location.href = "admin-login.html";
+}
+</script>
+
+
+<script src="admin.js"></script>
+</body>
+</html>

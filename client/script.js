@@ -49,14 +49,11 @@ form.addEventListener("submit", async (e) => {
   ========================== */
 
   try {
-    const res = await fetch(
-      "https://heavenkids-api.onrender.com/api/book",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      }
-    );
+   const res = await fetch("https://heavenkids-api.onrender.com/api/book", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});
 
     const result = await res.json();
 

@@ -2,7 +2,6 @@
   "name": "heaven-kids",
   "version": "1.0.0",
   "main": "server/server.js",
-  "homepage": "https://Santanugupta9.github.io/heaven-kids",
   "scripts": {
     "start": "node server/server.js",
     "deploy": "gh-pages -d client"

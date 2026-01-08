@@ -58,7 +58,10 @@ form.addEventListener("submit", async (e) => {
 
     const result = await res.json();
 
-    if (result.success) {
+   console.log("Backend response:", result);
+
+if (result.success) 
+ {
       successMsg.classList.remove("hidden");
       form.reset();
     } else {

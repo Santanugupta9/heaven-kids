@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     res.json({ success: true });
 
     // 2. Send email in the background (do not await)
-    console.log("📨 Attempting to send email to:", process.env.EMAIL_USER);
+    console.log("📨 Attempting to send email to: princegupta3637@gmail.com");
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -38,11 +38,13 @@ router.post("/", async (req, res) => {
 
     transporter.sendMail({
       from: `"Heaven Kids" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+      to: "princegupta3637@gmail.com",
       subject: "📩 New Booking Received",
       html: `
         <h3>New Admission Request</h3>
         <p><b>Parent:</b> ${booking.parentName}</p>
+        <p><b>Child:</b> ${booking.childName}</p>
+        <p><b>Email:</b> ${booking.email}</p>
         <p><b>Phone:</b> ${booking.phone}</p>
         <p><b>Program:</b> ${booking.program}</p>
         <p><b>Message:</b> ${booking.message}</p>

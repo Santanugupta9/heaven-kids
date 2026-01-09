@@ -24,11 +24,14 @@ router.post("/", async (req, res) => {
 
     // 2. Send email in the background (do not await)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-      }
+      },
+      family: 4 // Force IPv4 to avoid timeouts on Render
     });
 
     transporter.sendMail({
@@ -42,7 +45,9 @@ router.post("/", async (req, res) => {
         <p><b>Program:</b> ${booking.program}</p>
         <p><b>Message:</b> ${booking.message}</p>
       `
-    }).catch(err => console.error("❌ Email Sending Failed:", err));
+    })
+    .then(() => console.log("✅ Email sent successfully"))
+    .catch(err => console.error("❌ Email Sending Failed:", err));
 
   } catch (err) {
     console.error("❌ Booking Error:", err);

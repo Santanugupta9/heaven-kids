@@ -9,6 +9,10 @@ router.post("/", async (req, res) => {
   try {
     const booking = await Booking.create(req.body);
 
+    // 1. Respond to the client IMMEDIATELY so they don't get a timeout
+    res.json({ success: true });
+
+    // 2. Send email in the background (do not await)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -17,7 +21,7 @@ router.post("/", async (req, res) => {
       }
     });
 
-    await transporter.sendMail({
+    transporter.sendMail({
       from: `"Heaven Kids" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       subject: "📩 New Booking Received",
@@ -26,12 +30,16 @@ router.post("/", async (req, res) => {
         <p><b>Parent:</b> ${booking.parentName}</p>
         <p><b>Phone:</b> ${booking.phone}</p>
         <p><b>Program:</b> ${booking.program}</p>
+        <p><b>Message:</b> ${booking.message}</p>
       `
-    });
+    }).catch(err => console.error("❌ Email Sending Failed:", err));
 
-    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ success: false });
+    console.error("❌ Booking Error:", err);
+    // Only send error response if we haven't sent success yet
+    if (!res.headersSent) {
+      res.status(500).json({ success: false, error: err.message });
+    }
   }
 });
 

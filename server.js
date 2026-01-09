@@ -15,7 +15,8 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log("❌ Mongo Error:", err));
 
 // Routes
-app.use("/api/booking", require("./routes/bookingRoutes"));
+app.use("/api/booking", require("./server/routes/bookingRoutes"));
+
 
 // Test route
 app.get("/", (req, res) => {

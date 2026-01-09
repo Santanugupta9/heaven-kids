@@ -34,6 +34,8 @@ router.post("/", async (req, res) => {
         pass: process.env.EMAIL_PASS
       },
       family: 4, // Force IPv4 to avoid timeouts on Render
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000, // 10 seconds
       debug: true, // Enable debug logs
       logger: true // Log to console
     });

@@ -1,9 +1,12 @@
+const API_BASE_URL = "https://heavenkidsmontessori.onrender.com/api";
+
 const form = document.getElementById("bookingForm");
 const spinner = document.getElementById("spinner");
 const btnText = document.getElementById("btnText");
 const successMsg = document.getElementById("success-msg");
 
-form.addEventListener("submit", async (e) => {
+if (form) {
+  form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   // show spinner
@@ -49,7 +52,7 @@ form.addEventListener("submit", async (e) => {
   ========================== */
 
   try {
-   const res = await fetch("https://heavenkidsmontessori.onrender.com/api/booking", {
+   const res = await fetch(`${API_BASE_URL}/booking`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(data)
@@ -79,6 +82,7 @@ form.addEventListener("submit", async (e) => {
   spinner.classList.add("hidden");
   btnText.textContent = "Book Appointment";
 });
+}
 
 /* ==========================
    📖 READ MORE TOGGLE
@@ -86,7 +90,11 @@ form.addEventListener("submit", async (e) => {
 window.toggleAboutFeatures = function() {
   const features = document.getElementById("expanded-features");
   const btnIcon = document.getElementById("btnIcon");
-  const btnText = document.getElementById("readMoreBtn").querySelector("span");
+  const btn = document.getElementById("readMoreBtn");
+  
+  if (!features || !btnIcon || !btn) return;
+  
+  const btnText = btn.querySelector("span");
 
   if (features.classList.contains("hidden")) {
     features.classList.remove("hidden");
@@ -109,35 +117,88 @@ async function fetchClasses() {
   if (!container) return;
 
   try {
-    const res = await fetch("https://heavenkidsmontessori.onrender.com/api/classes");
+    const res = await fetch(`${API_BASE_URL}/classes`);
     const classes = await res.json();
 
-    container.innerHTML = "";
+    if (classes.length === 0) {
+        container.innerHTML = '<div class="col-span-3 text-center text-gray-400">No classes available yet.</div>';
+        return;
+    }
+
+    let html = "";
     classes.forEach(cls => {
-      const card = `
-        <div class="bg-white rounded-3xl p-4 shadow-soft hover:shadow-xl transition duration-300 group">
-            <div class="h-56 overflow-hidden rounded-2xl relative">
-                <img src="${cls.imageUrl}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+      html += `
+        <div class="bg-white rounded-3xl p-4 shadow-soft hover:shadow-xl transition duration-300 group flex flex-col h-full">
+            <div class="h-56 overflow-hidden rounded-2xl relative shrink-0">
+                <img src="${cls.imageUrl}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="${cls.title}">
                 <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-brand-primary shadow-sm">
                     ${cls.age}
                 </div>
             </div>
-            <div class="p-4 pt-6">
+            <div class="p-4 pt-6 flex flex-col flex-grow">
                 <h3 class="text-xl font-bold text-brand-dark mb-2">${cls.title}</h3>
-                <p class="text-gray-500 text-sm mb-4 line-clamp-2">${cls.description}</p>
-                <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+                <p class="text-gray-500 text-sm mb-4 line-clamp-3 flex-grow">${cls.description}</p>
+                <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
                     <button onclick="document.getElementById('booking-modal').classList.remove('hidden')" class="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center hover:bg-red-500 transition shadow-glow">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
         </div>`;
-      container.innerHTML += card;
     });
+    container.innerHTML = html;
   } catch (err) {
     console.error("Error fetching classes:", err);
+    container.innerHTML = '<div class="col-span-3 text-center text-red-400">Failed to load classes.</div>';
   }
 }
 
-// Load classes on page load
-document.addEventListener("DOMContentLoaded", fetchClasses);
+/* ==========================
+   🖼️ FETCH GALLERY
+========================== */
+async function fetchGallery() {
+  const container = document.getElementById("gallery-container");
+  if (!container) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/gallery`);
+    const images = await res.json();
+    
+    // Display latest 8 images
+    const displayImages = images.slice(0, 8);
+
+    if (displayImages.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center text-gray-400">No photos yet.</div>';
+        return;
+    }
+
+    let html = "";
+    displayImages.forEach((img, index) => {
+        // Pattern: 1st item spans 2 cols on medium screens
+        const isFeatured = index === 0 || index === 5; 
+        const spanClass = isFeatured ? "md:col-span-2" : "";
+        
+        html += `
+            <div class="img-zoom-container h-72 ${spanClass} relative group cursor-pointer rounded-3xl overflow-hidden">
+                <img src="${img.imageUrl}" alt="${img.category}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition"></div>
+                <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition transform translate-y-2 group-hover:translate-y-0">
+                    <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-brand-dark shadow-sm">
+                        ${img.category}
+                    </span>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+
+  } catch (err) {
+    console.error("Error fetching gallery:", err);
+  }
+}
+
+// Load content on page load
+document.addEventListener("DOMContentLoaded", () => {
+    fetchClasses();
+    fetchGallery();
+});

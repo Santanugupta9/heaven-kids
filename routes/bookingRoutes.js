@@ -4,6 +4,16 @@ const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
+// GET all bookings (for Admin page)
+router.get("/", async (req, res) => {
+  try {
+    const bookings = await Booking.find().sort({ createdAt: -1 });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post("/", async (req, res) => {
 
   try {

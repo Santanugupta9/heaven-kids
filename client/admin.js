@@ -1,4 +1,4 @@
-fetch("https://heavenkids-api.onrender.com/api/gallery")
+fetch("https://heavenkidsmontessori.onrender.com/api/booking")
 
   .then(res => res.json())
   .then(data => {

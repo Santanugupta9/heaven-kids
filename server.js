@@ -17,6 +17,8 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 app.use("/api/booking", require("./routes/bookingRoutes"));
 app.use("/api/book", require("./routes/bookingRoutes")); // Fallback for legacy frontend
+app.use("/api/gallery", require("./routes/galleryRoutes"));
+app.use("/api/classes", require("./routes/classRoutes"));
 
 // Test route
 app.get("/", (req, res) => {

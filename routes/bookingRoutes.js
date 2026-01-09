@@ -28,7 +28,8 @@ router.post("/", async (req, res) => {
     // SendGrid Transport
     const transporter = nodemailer.createTransport({
       host: "smtp.sendgrid.net",
-      port: 465,
+      port: 587,
+      secure: false,
        auth: {    user: "apikey",    pass: process.env.SENDGRID_API_KEY
       },
       family: 4, // Force IPv4 to avoid timeouts on Render
@@ -72,6 +73,16 @@ router.post("/", async (req, res) => {
     if (!res.headersSent) {
       res.status(500).json({ success: false, error: err.message });
     }
+  }
+});
+
+// DELETE a booking
+router.delete("/:id", async (req, res) => {
+  try {
+    await Booking.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -1,11 +1,14 @@
 {
-  "name": "heaven-kids",
+  "name": "server",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "deploy": "gh-pages -d client"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
@@ -13,11 +16,9 @@
     "express": "^5.2.1",
     "mongoose": "^9.1.2",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^6.9.3"
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0",
     "nodemon": "^3.1.11"
   }
 }

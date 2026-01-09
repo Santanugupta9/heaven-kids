@@ -36,6 +36,9 @@ router.post("/", async (req, res) => {
       logger: true // Log to console
     });
 
+    // Format the date and time
+    const bookingTime = new Date(booking.createdAt).toLocaleString();
+
     transporter.sendMail({
       from: `"Heaven Kids" <${process.env.EMAIL_USER}>`,
       to: "princegupta3637@gmail.com",
@@ -48,6 +51,8 @@ router.post("/", async (req, res) => {
         <p><b>Phone:</b> ${booking.phone}</p>
         <p><b>Program:</b> ${booking.program}</p>
         <p><b>Message:</b> ${booking.message}</p>
+        <hr>
+        <p><b>Received At:</b> ${bookingTime}</p>
       `
     })
     .then(() => console.log("✅ Email sent successfully"))

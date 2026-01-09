@@ -714,17 +714,17 @@
                 <h3 class="text-2xl font-bold text-gray-800 font-heading">Apply for Admission</h3>
                 <p class="text-gray-500 mt-2">Start your child's journey with us.</p>
             </div>
-            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Application sent!'); document.getElementById('booking-modal').classList.add('hidden');">
-                <input type="text" placeholder="Student Name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition">
-                <input type="text" placeholder="Parent Phone" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition">
-                 <select class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-gray-500">
+            <form id="modalBookingForm" class="space-y-4">
+                <input type="text" id="modalChildName" placeholder="Student Name" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition">
+                <input type="text" id="modalPhone" placeholder="Parent Phone" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition">
+                 <select id="modalProgram" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-gray-500">
                     <option>Select Class</option>
                     <option>Kindergarten</option>
                     <option>Toddler Group</option>
                     <option>Preschool</option>
                     
                 </select>
-                <button class="w-full bg-brand-primary text-white py-4 rounded-xl font-bold hover:bg-red-500 transition shadow-lg">Submit Application</button>
+                <button type="submit" id="modalSubmitBtn" class="w-full bg-brand-primary text-white py-4 rounded-xl font-bold hover:bg-red-500 transition shadow-lg">Submit Application</button>
             </form>
         </div>
     </div>

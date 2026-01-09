@@ -1,4 +1,6 @@
-const API_URL = "https://heavenkidsmontessori.onrender.com/api";
+const API_URL = window.location.protocol === 'file:' 
+  ? "https://heavenkidsmontessori.onrender.com/api" 
+  : "/api";
 
 // =======================
 // 1. ADMISSIONS LOGIC

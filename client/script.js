@@ -1,4 +1,6 @@
-const API_BASE_URL = "https://heavenkidsmontessori.onrender.com/api";
+const API_BASE_URL = window.location.protocol === 'file:' 
+  ? "https://heavenkidsmontessori.onrender.com/api" 
+  : "/api";
 
 const form = document.getElementById("bookingForm");
 const spinner = document.getElementById("spinner");
@@ -82,6 +84,60 @@ if (form) {
   spinner.classList.add("hidden");
   btnText.textContent = "Book Appointment";
 });
+}
+
+/* ==========================
+   MODAL FORM SUBMISSION
+========================== */
+const modalForm = document.getElementById("modalBookingForm");
+if (modalForm) {
+  modalForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("modalSubmitBtn");
+    const originalText = btn.textContent;
+    
+    btn.textContent = "Sending...";
+    btn.disabled = true;
+
+    const data = {
+      childName: document.getElementById("modalChildName").value.trim(),
+      phone: document.getElementById("modalPhone").value.trim(),
+      program: document.getElementById("modalProgram").value,
+      // Default values for fields not in modal
+      parentName: "N/A (Quick Apply)",
+      email: "N/A",
+      message: "Quick application from popup modal"
+    };
+
+    if (!data.phone.match(/^[0-9]{10}$/)) {
+      alert("❌ Enter valid 10-digit mobile number");
+      btn.textContent = originalText;
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/booking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        alert("✅ Application sent successfully!");
+        modalForm.reset();
+        document.getElementById('booking-modal').classList.add('hidden');
+      } else {
+        alert("❌ Submission failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Server error");
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  });
 }
 
 /* ==========================

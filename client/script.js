@@ -55,6 +55,10 @@ form.addEventListener("submit", async (e) => {
   body: JSON.stringify(data)
 });
 
+    if (!res.ok) {
+      const text = await res.text(); // Get response as text to see if it's HTML error
+      throw new Error(`Server responded with ${res.status}: ${text.substring(0, 100)}...`);
+    }
 
     const result = await res.json();
 
@@ -68,7 +72,8 @@ if (result.success)
       alert("❌ Submission failed");
     }
   } catch (error) {
-    alert("❌ Server error");
+    console.error("❌ Submission Error:", error);
+    alert("❌ Server error. Please check the console for details.");
   }
 
   // hide spinner

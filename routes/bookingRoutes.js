@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/book", async (req, res) => {
   try {
     const booking = await Booking.create(req.body);
 

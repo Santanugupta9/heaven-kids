@@ -25,13 +25,11 @@ router.post("/", async (req, res) => {
     // 2. Send email in the background (do not await)
     console.log("📨 Attempting to send email to: princegupta3637@gmail.com");
 
+    // SendGrid Transport
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "smtp.sendgrid.net",
       port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+       auth: {    user: "apikey",    pass: process.env.SENDGRID_API_KEY
       },
       family: 4, // Force IPv4 to avoid timeouts on Render
       connectionTimeout: 30000, // 30 seconds
@@ -65,8 +63,7 @@ router.post("/", async (req, res) => {
         <hr>
         <p><b>Received At:</b> ${bookingTime}</p>
       `
-    })
-    .then(() => console.log("✅ Email sent successfully"))
+    }).then(() => console.log("✅ Email sent successfully"))
     .catch(err => console.error("❌ Email Sending Failed:", err));
 
   } catch (err) {

@@ -1,7 +1,7 @@
 const express = require("express");
-const Booking = require("../Booking");
+const Booking = require("../models/Booking");
 const nodemailer = require("nodemailer");
-const protect = require("../authMiddleware");
+const protect = require("./authMiddleware");
 
 const router = express.Router();
 
@@ -19,12 +19,6 @@ router.post("/", async (req, res) => {
 
   try {
     const booking = await Booking.create(req.body);
-
-    // 1. Respond to the client IMMEDIATELY so they don't get a timeout
-    res.json({ success: true });
-
-    // 2. Send email in the background (do not await)
-    console.log("📨 Attempting to send email to: princegupta3637@gmail.com");
 
     // SendGrid Transport
     const transporter = nodemailer.createTransport({
@@ -52,7 +46,9 @@ router.post("/", async (req, res) => {
       minute: "2-digit",
     });
 
-    transporter.sendMail({
+    console.log("📨 Attempting to send email to: princegupta3637@gmail.com");
+
+    await transporter.sendMail({
       from: `"Heaven Kids" <${process.env.EMAIL_USER}>`,
       to: "princegupta3637@gmail.com",
       subject: "📩 New Booking Received",
@@ -67,15 +63,14 @@ router.post("/", async (req, res) => {
         <hr>
         <p><b>Received At:</b> ${bookingTime}</p>
       `
-    }).then(() => console.log("✅ Email sent successfully"))
-    .catch(err => console.error("❌ Email Sending Failed:", err));
+    });
+
+    console.log("✅ Email sent successfully");
+    res.json({ success: true });
 
   } catch (err) {
     console.error("❌ Booking Error:", err);
-    // Only send error response if we haven't sent success yet
-    if (!res.headersSent) {
-      res.status(500).json({ success: false, error: err.message });
-    }
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

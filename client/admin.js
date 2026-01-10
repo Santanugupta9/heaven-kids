@@ -89,7 +89,7 @@ async function fetchGallery() {
       const card = document.createElement("div");
       card.className = "relative group rounded-xl overflow-hidden shadow-sm bg-white";
       card.innerHTML = `
-        <img src="${img.imageUrl}" class="w-full h-48 object-cover">
+        <img src="${img.imageUrl}" class="w-full h-48 object-cover" onerror="this.parentElement.style.display='none'">
         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
             <button onclick="deleteImage('${img._id}')" class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600"><i class="fa-solid fa-trash"></i></button>
         </div>
@@ -250,6 +250,10 @@ async function cleanupFacebookCDN() {
       method: "DELETE",
       headers: getAuthHeaders()
     });
+    
+    if (!galleryRes.ok) {
+      throw new Error(`Gallery cleanup failed: ${galleryRes.statusText}`);
+    }
     const galleryResult = await galleryRes.json();
 
     // Clean class images
@@ -257,6 +261,10 @@ async function cleanupFacebookCDN() {
       method: "DELETE",
       headers: getAuthHeaders()
     });
+    
+    if (!classRes.ok) {
+      throw new Error(`Classes cleanup failed: ${classRes.statusText}`);
+    }
     const classResult = await classRes.json();
 
     const totalDeleted = (galleryResult.deletedCount || 0) + (classResult.deletedCount || 0);
@@ -276,6 +284,6 @@ async function cleanupFacebookCDN() {
   } catch (err) {
     console.error(err);
     statusDiv.className = "p-4 rounded-lg bg-red-100 text-red-700 block";
-    statusDiv.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> Error during cleanup. Make sure you're logged in as admin.`;
+    statusDiv.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> ${err.message}`;
   }
 }

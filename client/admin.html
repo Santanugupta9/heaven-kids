@@ -82,7 +82,12 @@
                 <div id="view-gallery" class="hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <h2 class="text-3xl font-bold text-gray-800">Gallery Management</h2>
+                        <button onclick="cleanupFacebookCDN()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-broom"></i> Clean Invalid Images
+                        </button>
                     </div>
+                    
+                    <div id="cleanup-status" class="hidden p-4 rounded-lg"></div>
 
                     <!-- Upload Box -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">

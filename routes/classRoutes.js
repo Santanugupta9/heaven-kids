@@ -55,4 +55,33 @@ router.delete("/:id", protect, async (req, res) => {
   }
 });
 
+// CLEANUP: Remove Facebook CDN images that are blocked (403 Forbidden)
+router.delete("/cleanup/facebook-cdn", protect, async (req, res) => {
+  try {
+    const fbcdnRegex = /fbcdn\.net|facebook\.com/;
+    const invalidClasses = await Class.find({ imageUrl: { $regex: fbcdnRegex } });
+    
+    const deletedCount = invalidClasses.length;
+    
+    for (const cls of invalidClasses) {
+      if (cls.publicId) {
+        try {
+          await cloudinary.uploader.destroy(cls.publicId);
+        } catch (cloudErr) {
+          console.log("Cloudinary deletion skipped:", cls.publicId);
+        }
+      }
+      await Class.findByIdAndDelete(cls._id);
+    }
+    
+    res.json({ 
+      success: true, 
+      message: `Cleaned up ${deletedCount} Facebook CDN class images`,
+      deletedCount 
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

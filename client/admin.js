@@ -234,3 +234,48 @@ document.getElementById("classForm").addEventListener("submit", async (e) => {
     btn.disabled = false;
   }
 });
+
+// =======================
+// 4. CLEANUP INVALID IMAGES
+// =======================
+async function cleanupFacebookCDN() {
+  const statusDiv = document.getElementById("cleanup-status");
+  statusDiv.className = "p-4 rounded-lg bg-yellow-100 text-yellow-700 block";
+  statusDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Scanning for blocked images...`;
+  statusDiv.classList.remove("hidden");
+
+  try {
+    // Clean gallery images
+    const galleryRes = await fetch(`${API_URL}/gallery/cleanup/facebook-cdn`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    const galleryResult = await galleryRes.json();
+
+    // Clean class images
+    const classRes = await fetch(`${API_URL}/classes/cleanup/facebook-cdn`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
+    const classResult = await classRes.json();
+
+    const totalDeleted = (galleryResult.deletedCount || 0) + (classResult.deletedCount || 0);
+
+    if (totalDeleted > 0) {
+      statusDiv.className = "p-4 rounded-lg bg-green-100 text-green-700 block";
+      statusDiv.innerHTML = `<i class="fa-solid fa-check-circle"></i> Successfully removed ${totalDeleted} blocked images (Facebook CDN). Please upload new images for these items.`;
+    } else {
+      statusDiv.className = "p-4 rounded-lg bg-blue-100 text-blue-700 block";
+      statusDiv.innerHTML = `<i class="fa-solid fa-info-circle"></i> No blocked images (Facebook CDN) found.`;
+    }
+
+    // Refresh gallery and classes
+    fetchGallery();
+    fetchAdminClasses();
+
+  } catch (err) {
+    console.error(err);
+    statusDiv.className = "p-4 rounded-lg bg-red-100 text-red-700 block";
+    statusDiv.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> Error during cleanup. Make sure you're logged in as admin.`;
+  }
+}

@@ -170,6 +170,9 @@ async function fetchClasses() {
   const container = document.getElementById("classes-container");
   if (!container) return;
 
+  // Placeholder image for broken images
+  const placeholderImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23f0f0f0' width='400' height='300'/%3E%3Ctext fill='%23aaa' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
+
   try {
     const res = await fetch(`${API_BASE_URL}/classes`);
     const classes = await res.json();
@@ -181,10 +184,17 @@ async function fetchClasses() {
 
     let html = "";
     classes.forEach(cls => {
+      // Check if image URL is from Facebook CDN (which might be blocked)
+      const isFacebookCDN = cls.imageUrl && cls.imageUrl.includes('fbcdn.net');
+      const finalImageUrl = isFacebookCDN ? placeholderImage : cls.imageUrl;
+      
       html += `
         <div class="bg-white rounded-3xl p-4 shadow-soft hover:shadow-xl transition duration-300 group flex flex-col h-full">
             <div class="h-56 overflow-hidden rounded-2xl relative shrink-0">
-                <img src="${cls.imageUrl}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="${cls.title}">
+                <img src="${finalImageUrl}" 
+                     class="w-full h-full object-cover transition duration-700 group-hover:scale-110" 
+                     alt="${cls.title}"
+                     onerror="this.onerror=null; this.src='${placeholderImage}'">
                 <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-brand-primary shadow-sm">
                     ${cls.age}
                 </div>
@@ -214,6 +224,9 @@ async function fetchGallery() {
   const container = document.getElementById("gallery-container");
   if (!container) return;
 
+  // Placeholder image for broken images
+  const placeholderImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect fill='%23f0f0f0' width='400' height='400'/%3E%3Ctext fill='%23aaa' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
+
   try {
     const res = await fetch(`${API_BASE_URL}/gallery`);
     const images = await res.json();
@@ -228,13 +241,20 @@ async function fetchGallery() {
 
     let html = "";
     displayImages.forEach((img, index) => {
+        // Check if image URL is from Facebook CDN (which might be blocked)
+        const isFacebookCDN = img.imageUrl && img.imageUrl.includes('fbcdn.net');
+        const finalImageUrl = isFacebookCDN ? placeholderImage : img.imageUrl;
+        
         // Pattern: 1st item spans 2 cols on medium screens
         const isFeatured = index === 0 || index === 5; 
         const spanClass = isFeatured ? "md:col-span-2" : "";
         
         html += `
             <div class="img-zoom-container h-72 ${spanClass} relative group cursor-pointer rounded-3xl overflow-hidden">
-                <img src="${img.imageUrl}" onerror="this.parentElement.style.display='none'" alt="${img.category}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <img src="${finalImageUrl}" 
+                     onerror="this.onerror=null; this.src='${placeholderImage}'" 
+                     alt="${img.category}" 
+                     class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                 <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition"></div>
                 <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition transform translate-y-2 group-hover:translate-y-0">
                     <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-brand-dark shadow-sm">

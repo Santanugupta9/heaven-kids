@@ -1,11 +1,12 @@
 const express = require("express");
 const Booking = require("../models/Booking");
 const nodemailer = require("nodemailer");
+const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // GET all bookings (for Admin page)
-router.get("/", async (req, res) => {
+router.get("/", protect, async (req, res) => {
   try {
     const bookings = await Booking.find().sort({ createdAt: -1 });
     res.json(bookings);
@@ -79,7 +80,7 @@ router.post("/", async (req, res) => {
 });
 
 // DELETE a booking
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
     res.json({ success: true });

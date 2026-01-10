@@ -4,6 +4,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../cloudinary");
 const Class = require("../models/Class");
+const protect = require("../middleware/authMiddleware");
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -26,7 +27,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST create class
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
     const newClass = await Class.create({
       title: req.body.title,
@@ -42,7 +43,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 });
 
 // DELETE class
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
     const classItem = await Class.findByIdAndDelete(req.params.id);
     if (classItem && classItem.publicId) {

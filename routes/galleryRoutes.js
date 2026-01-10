@@ -4,6 +4,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../cloudinary");
 const Gallery = require("../models/Gallery");
+const protect = require("../middleware/authMiddleware");
 
 // Configure Multer Storage for Cloudinary
 const storage = new CloudinaryStorage({
@@ -27,7 +28,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST upload image
-router.post("/upload", upload.single("image"), async (req, res) => {
+router.post("/upload", protect, upload.single("image"), async (req, res) => {
   try {
     const newImage = await Gallery.create({
       imageUrl: req.file.path,
@@ -41,7 +42,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
 });
 
 // DELETE image
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
     const image = await Gallery.findByIdAndDelete(req.params.id);
     if (image && image.publicId) {

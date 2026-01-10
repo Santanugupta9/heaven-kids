@@ -10,6 +10,10 @@ function logout() {
     window.location.href = "admin-login.html";
 }
 
+function getAuthHeaders() {
+    return { "Authorization": `Bearer ${localStorage.getItem("admin")}` };
+}
+
 // =======================
 // 1. ADMISSIONS LOGIC
 // =======================
@@ -18,7 +22,9 @@ async function fetchBookings() {
   tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-gray-400">Loading data...</td></tr>`;
 
   try {
-    const res = await fetch(`${API_URL}/booking`);
+    const res = await fetch(`${API_URL}/booking`, {
+        headers: getAuthHeaders()
+    });
     const data = await res.json();
 
     tbody.innerHTML = "";
@@ -57,7 +63,10 @@ async function fetchBookings() {
 async function deleteBooking(id) {
   if (!confirm("Are you sure you want to delete this record?")) return;
   try {
-    await fetch(`${API_URL}/booking/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/booking/${id}`, { 
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
     fetchBookings(); // Refresh list
   } catch (err) {
     alert("Failed to delete");
@@ -96,7 +105,10 @@ async function fetchGallery() {
 async function deleteImage(id) {
   if (!confirm("Delete this photo permanently?")) return;
   try {
-    await fetch(`${API_URL}/gallery/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/gallery/${id}`, { 
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
     fetchGallery();
   } catch (err) {
     alert("Failed to delete image");
@@ -116,7 +128,11 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   btn.disabled = true;
 
   try {
-    const res = await fetch(`${API_URL}/gallery/upload`, { method: "POST", body: formData });
+    const res = await fetch(`${API_URL}/gallery/upload`, { 
+        method: "POST", 
+        body: formData,
+        headers: getAuthHeaders() // Do NOT set Content-Type for FormData
+    });
     const result = await res.json();
     if (result.success) {
       status.textContent = "✅ Upload Successful!";
@@ -176,7 +192,10 @@ async function fetchAdminClasses() {
 async function deleteClass(id) {
   if (!confirm("Delete this class?")) return;
   try {
-    await fetch(`${API_URL}/classes/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/classes/${id}`, { 
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
     fetchAdminClasses();
   } catch (err) {
     alert("Failed to delete class");
@@ -198,7 +217,11 @@ document.getElementById("classForm").addEventListener("submit", async (e) => {
   btn.disabled = true;
 
   try {
-    const res = await fetch(`${API_URL}/classes`, { method: "POST", body: formData });
+    const res = await fetch(`${API_URL}/classes`, { 
+        method: "POST", 
+        body: formData,
+        headers: getAuthHeaders()
+    });
     const result = await res.json();
     if (result.success) {
       document.getElementById("classForm").reset();

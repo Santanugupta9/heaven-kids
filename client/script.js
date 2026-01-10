@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://heavenkidsmontessori.onrender.com/api";
+const API_BASE_URL = "https://heaven-kids.onrender.com/api";
 
 const form = document.getElementById("bookingForm");
 const spinner = document.getElementById("spinner");

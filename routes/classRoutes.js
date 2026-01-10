@@ -29,6 +29,9 @@ router.get("/", async (req, res) => {
 // POST create class
 router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
     const newClass = await Class.create({
       title: req.body.title,
       age: req.body.age,
@@ -37,19 +40,6 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
       publicId: req.file.filename
     });
     res.json({ success: true, class: newClass });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE class
-router.delete("/:id", protect, async (req, res) => {
-  try {
-    const classItem = await Class.findByIdAndDelete(req.params.id);
-    if (classItem && classItem.publicId) {
-      await cloudinary.uploader.destroy(classItem.publicId);
-    }
-    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -79,6 +69,19 @@ router.delete("/cleanup/facebook-cdn", protect, async (req, res) => {
       message: `Cleaned up ${deletedCount} Facebook CDN class images`,
       deletedCount 
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE class
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const classItem = await Class.findByIdAndDelete(req.params.id);
+    if (classItem && classItem.publicId) {
+      await cloudinary.uploader.destroy(classItem.publicId);
+    }
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

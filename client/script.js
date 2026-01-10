@@ -185,7 +185,7 @@ async function fetchClasses() {
     let html = "";
     classes.forEach(cls => {
       // Check if image URL is from Facebook CDN (which might be blocked)
-      const isFacebookCDN = cls.imageUrl && cls.imageUrl.includes('fbcdn.net');
+      const isFacebookCDN = cls.imageUrl && (cls.imageUrl.includes('fbcdn.net') || cls.imageUrl.includes('facebook.com'));
       const finalImageUrl = isFacebookCDN ? placeholderImage : cls.imageUrl;
       
       html += `
@@ -242,7 +242,7 @@ async function fetchGallery() {
     let html = "";
     displayImages.forEach((img, index) => {
         // Check if image URL is from Facebook CDN (which might be blocked)
-        const isFacebookCDN = img.imageUrl && img.imageUrl.includes('fbcdn.net');
+        const isFacebookCDN = img.imageUrl && (img.imageUrl.includes('fbcdn.net') || img.imageUrl.includes('facebook.com'));
         const finalImageUrl = isFacebookCDN ? placeholderImage : img.imageUrl;
         
         // Pattern: 1st item spans 2 cols on medium screens

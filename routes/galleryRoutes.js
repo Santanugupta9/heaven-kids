@@ -30,25 +30,15 @@ router.get("/", async (req, res) => {
 // POST upload image
 router.post("/upload", protect, upload.single("image"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
     const newImage = await Gallery.create({
       imageUrl: req.file.path,
       publicId: req.file.filename,
       category: req.body.category || "General"
     });
     res.json({ success: true, image: newImage });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE image
-router.delete("/:id", protect, async (req, res) => {
-  try {
-    const image = await Gallery.findByIdAndDelete(req.params.id);
-    if (image && image.publicId) {
-      await cloudinary.uploader.destroy(image.publicId);
-    }
-    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -82,6 +72,19 @@ router.delete("/cleanup/facebook-cdn", protect, async (req, res) => {
       message: `Cleaned up ${deletedCount} Facebook CDN images`,
       deletedCount 
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE image
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const image = await Gallery.findByIdAndDelete(req.params.id);
+    if (image && image.publicId) {
+      await cloudinary.uploader.destroy(image.publicId);
+    }
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

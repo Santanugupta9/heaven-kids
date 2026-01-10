@@ -1,4 +1,4 @@
-const API_URL = "https://heavenkidsmontessori.onrender.com/api";
+const API_URL = "https://heaven-kids.onrender.com/api";
 
 // Auth Check
 if (!localStorage.getItem("admin")) {

@@ -234,7 +234,7 @@ async function fetchGallery() {
         
         html += `
             <div class="img-zoom-container h-72 ${spanClass} relative group cursor-pointer rounded-3xl overflow-hidden">
-                <img src="${img.imageUrl}" alt="${img.category}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <img src="${img.imageUrl}" onerror="this.parentElement.style.display='none'" alt="${img.category}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                 <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition"></div>
                 <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition transform translate-y-2 group-hover:translate-y-0">
                     <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-brand-dark shadow-sm">

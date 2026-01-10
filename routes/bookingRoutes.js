@@ -1,7 +1,7 @@
 const express = require("express");
 const Booking = require("../models/Booking");
 const nodemailer = require("nodemailer");
-const protect = require("../middleware/authMiddleware");
+const protect = require("./authMiddleware");
 
 const router = express.Router();
 

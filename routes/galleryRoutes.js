@@ -4,7 +4,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../cloudinary");
 const Gallery = require("../models/Gallery");
-const protect = require("../middleware/authMiddleware");
+const protect = require("./authMiddleware");
 
 // Configure Multer Storage for Cloudinary
 const storage = new CloudinaryStorage({

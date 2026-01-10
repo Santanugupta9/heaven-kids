@@ -30,7 +30,9 @@ router.post("/", async (req, res) => {
       host: "smtp.sendgrid.net",
       port: 587,
       secure: false,
-       auth: {    user: "apikey",    pass: process.env.SENDGRID_API_KEY
+      auth: {
+        user: "apikey",
+        pass: process.env.SENDGRID_API_KEY
       },
       family: 4, // Force IPv4 to avoid timeouts on Render
       connectionTimeout: 30000, // 30 seconds

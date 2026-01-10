@@ -1,6 +1,4 @@
-const API_BASE_URL = window.location.protocol === 'file:' 
-  ? "https://heavenkidsmontessori.onrender.com/api" 
-  : "/api";
+const API_BASE_URL = "https://heavenkidsmontessori.onrender.com/api";
 
 const form = document.getElementById("bookingForm");
 const spinner = document.getElementById("spinner");
@@ -251,6 +249,15 @@ async function fetchGallery() {
   } catch (err) {
     console.error("Error fetching gallery:", err);
   }
+}
+
+// Mobile Menu Toggle
+const menuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
 }
 
 // Load content on page load

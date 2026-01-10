@@ -1,6 +1,14 @@
-const API_URL = window.location.protocol === 'file:' 
-  ? "https://heavenkidsmontessori.onrender.com/api" 
-  : "/api";
+const API_URL = "https://heavenkidsmontessori.onrender.com/api";
+
+// Auth Check
+if (!localStorage.getItem("admin")) {
+    window.location.href = "admin-login.html";
+}
+
+function logout() {
+    localStorage.removeItem("admin");
+    window.location.href = "admin-login.html";
+}
 
 // =======================
 // 1. ADMISSIONS LOGIC

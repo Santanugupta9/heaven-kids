@@ -61,7 +61,7 @@ router.delete("/cleanup/facebook-cdn", protect, async (req, res) => {
         try {
           await cloudinary.uploader.destroy(img.publicId);
         } catch (cloudErr) {
-          console.log("Cloudinary deletion skipped (may not exist):", img.publicId);
+          console.log("Cloudinary deletion skipped:", img.publicId);
         }
       }
       await Gallery.findByIdAndDelete(img._id);

@@ -78,13 +78,28 @@ async function deleteBooking(id) {
 // =======================
 async function fetchGallery() {
   const grid = document.getElementById("gallery-grid");
+  const filter = document.getElementById("filterGallery") ? document.getElementById("filterGallery").value : "All";
+  
   grid.innerHTML = `<div class="col-span-full text-center text-gray-400">Loading images...</div>`;
 
   try {
     const res = await fetch(`${API_URL}/gallery`);
-    const images = await res.json();
+    let images = await res.json();
+
+    // Filter images based on dropdown selection
+    if (filter !== "All") {
+        images = images.filter(img => img.category === filter);
+    }
+    
+    // Sort by newest first
+    images.sort((a, b) => b._id.localeCompare(a._id));
 
     grid.innerHTML = "";
+    if (images.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center text-gray-400">No images found for category: ${filter}</div>`;
+        return;
+    }
+
     images.forEach(img => {
       const card = document.createElement("div");
       card.className = "relative group rounded-xl overflow-hidden shadow-sm bg-white";

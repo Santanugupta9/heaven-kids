@@ -85,6 +85,14 @@
                 <div id="view-gallery" class="hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <h2 class="text-3xl font-bold text-gray-800">Gallery Management</h2>
+                        <select id="filterGallery" onchange="fetchGallery()" class="p-2 border rounded-lg bg-white text-gray-600 text-sm shadow-sm focus:outline-none focus:border-red-400">
+                            <option value="All">All Categories</option>
+                            <option value="Classroom">Classroom</option>
+                            <option value="Events">Events</option>
+                            <option value="Playground">Playground</option>
+                            <option value="General">General</option>
+                            <option value="About">About Us</option>
+                        </select>
                         <button onclick="cleanupFacebookCDN()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
                             <i class="fa-solid fa-broom"></i> Clean Invalid Images
                         </button>

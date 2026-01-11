@@ -280,7 +280,11 @@ async function fetchAboutImages() {
     const images = await res.json();
     
     // Filter for 'About' category and take latest 4
-    const aboutImages = images.filter(img => img.category === 'About').slice(0, 4);
+    // Sort by _id descending to ensure newest uploads appear first
+    const aboutImages = images
+        .filter(img => img.category === 'About')
+        .sort((a, b) => b._id.localeCompare(a._id))
+        .slice(0, 4);
 
     if (aboutImages.length > 0) document.getElementById('about-img-1').src = aboutImages[0].imageUrl;
     if (aboutImages.length > 1) document.getElementById('about-img-2').src = aboutImages[1].imageUrl;

@@ -30,6 +30,9 @@
                 <button onclick="switchTab('classes')" id="tab-classes" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-red-50 transition">
                     <i class="fa-solid fa-chalkboard-user"></i> Classes
                 </button>
+                <button onclick="switchTab('events')" id="tab-events" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-red-50 transition">
+                    <i class="fa-solid fa-calendar-days"></i> Events
+                </button>
             </nav>
             <div class="p-4 border-t">
                 <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition">
@@ -160,6 +163,50 @@
                     </div>
                 </div>
 
+                <!-- EVENTS SECTION -->
+                <div id="view-events" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-3xl font-bold text-gray-800">Manage Events</h2>
+                    </div>
+
+                    <!-- Add Event Form -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="font-bold text-lg mb-4">Add New Event</h3>
+                        <form id="eventForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Event Title</label>
+                                <input type="text" id="eventTitle" placeholder="e.g. Annual Sports Day" required class="w-full p-2 border rounded-lg bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Date</label>
+                                <input type="date" id="eventDate" required class="w-full p-2 border rounded-lg bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Location</label>
+                                <input type="text" id="eventLocation" placeholder="e.g. School Playground" class="w-full p-2 border rounded-lg bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Image (Optional)</label>
+                                <input type="file" id="eventImage" accept="image/*" class="w-full p-2 border rounded-lg bg-gray-50">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Description</label>
+                                <textarea id="eventDesc" rows="2" placeholder="Event details..." class="w-full p-2 border rounded-lg bg-gray-50"></textarea>
+                            </div>
+                            <div class="md:col-span-2 flex justify-end">
+                                <button type="submit" id="addEventBtn" class="bg-[#FF6B6B] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-red-500 transition">
+                                    <i class="fa-solid fa-plus"></i> Add Event
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Events List -->
+                    <div id="events-list" class="space-y-4">
+                        <!-- JS will populate this -->
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
@@ -171,11 +218,13 @@
             document.getElementById('view-admissions').classList.add('hidden');
             document.getElementById('view-gallery').classList.add('hidden');
             document.getElementById('view-classes').classList.add('hidden');
+            document.getElementById('view-events').classList.add('hidden');
             
             // Remove active class from tabs
             document.getElementById('tab-admissions').classList.remove('active-tab', 'bg-red-50');
             document.getElementById('tab-gallery').classList.remove('active-tab', 'bg-red-50');
             document.getElementById('tab-classes').classList.remove('active-tab', 'bg-red-50');
+            document.getElementById('tab-events').classList.remove('active-tab', 'bg-red-50');
 
             // Show selected view
             document.getElementById(`view-${tab}`).classList.remove('hidden');
@@ -184,6 +233,7 @@
             if(tab === 'gallery') fetchGallery();
             if(tab === 'admissions') fetchBookings();
             if(tab === 'classes') fetchAdminClasses();
+            if(tab === 'events') fetchAdminEvents();
         }
     </script>
 </body>

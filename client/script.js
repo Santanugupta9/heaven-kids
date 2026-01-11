@@ -271,6 +271,51 @@ async function fetchGallery() {
   }
 }
 
+/* ==========================
+   📅 FETCH EVENTS
+========================== */
+async function fetchEvents() {
+  const container = document.getElementById("events-container");
+  if (!container) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/events`);
+    const events = await res.json();
+
+    if (events.length === 0) {
+        container.innerHTML = '<div class="text-center text-gray-400">No upcoming events scheduled.</div>';
+        return;
+    }
+
+    let html = "";
+    events.forEach(evt => {
+      const date = new Date(evt.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const imageHtml = evt.imageUrl 
+        ? `<img src="${evt.imageUrl}" class="w-24 h-24 rounded-2xl object-cover shrink-0">`
+        : `<div class="w-24 h-24 rounded-2xl bg-brand-accent/20 flex flex-col items-center justify-center text-yellow-600 shrink-0"><i class="fa-solid fa-calendar-day text-4xl"></i></div>`;
+
+      html += `
+        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col md:flex-row items-center gap-6 border border-gray-100">
+            ${imageHtml}
+            <div class="flex-1 text-center md:text-left">
+                <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
+                    <h3 class="font-semibold text-lg text-brand-dark">${evt.title}</h3>
+                    <span class="text-xs bg-brand-primary/10 text-brand-primary px-2 py-1 rounded-full font-bold w-fit mx-auto md:mx-0">${date}</span>
+                </div>
+                <p class="text-gray-600 text-base mt-1 leading-relaxed">${evt.description || ''}</p>
+                <div class="mt-4 text-sm text-gray-500 flex items-center justify-center md:justify-start gap-2">
+                    <i class="fa-solid fa-location-dot text-brand-primary"></i> ${evt.location || 'School Premises'}
+                </div>
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    container.innerHTML = '<div class="text-center text-red-400">Failed to load events.</div>';
+  }
+}
+
 // Mobile Menu Toggle
 const menuBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -284,4 +329,5 @@ if (menuBtn && mobileMenu) {
 document.addEventListener("DOMContentLoaded", () => {
     fetchClasses();
     fetchGallery();
+    fetchEvents();
 });

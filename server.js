@@ -23,6 +23,7 @@ app.use("/api/booking", require("./routes/bookingRoutes"));
 app.use("/api/book", require("./routes/bookingRoutes")); // Fallback for legacy frontend
 app.use("/api/gallery", require("./routes/galleryRoutes"));
 app.use("/api/classes", require("./routes/classRoutes"));
+app.use("/api/events", require("./routes/eventRoutes"));
 
 // Test route
 app.get("/", (req, res) => {

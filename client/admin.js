@@ -236,6 +236,80 @@ document.getElementById("classForm").addEventListener("submit", async (e) => {
 });
 
 // =======================
+// 5. EVENTS LOGIC
+// =======================
+async function fetchAdminEvents() {
+  const list = document.getElementById("events-list");
+  list.innerHTML = `<div class="text-center text-gray-400">Loading events...</div>`;
+
+  try {
+    const res = await fetch(`${API_URL}/events`);
+    const events = await res.json();
+
+    list.innerHTML = "";
+    events.forEach(evt => {
+      const date = new Date(evt.date).toLocaleDateString();
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center gap-4";
+      card.innerHTML = `
+        <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0">
+            ${evt.imageUrl ? `<img src="${evt.imageUrl}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-calendar text-gray-400"></i>`}
+        </div>
+        <div class="flex-1">
+            <h4 class="font-bold text-gray-800">${evt.title}</h4>
+            <div class="text-sm text-gray-500"><i class="fa-regular fa-clock"></i> ${date} &bull; <i class="fa-solid fa-location-dot"></i> ${evt.location || 'N/A'}</div>
+            <p class="text-sm text-gray-600 mt-1 line-clamp-1">${evt.description || ''}</p>
+        </div>
+        <button onclick="deleteEvent('${evt._id}')" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-trash"></i></button>
+      `;
+      list.appendChild(card);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function deleteEvent(id) {
+  if (!confirm("Delete this event?")) return;
+  try {
+    await fetch(`${API_URL}/events/${id}`, { method: "DELETE", headers: getAuthHeaders() });
+    fetchAdminEvents();
+  } catch (err) {
+    alert("Failed to delete event");
+  }
+}
+
+document.getElementById("eventForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById("addEventBtn");
+  const formData = new FormData();
+  
+  formData.append("title", document.getElementById("eventTitle").value);
+  formData.append("date", document.getElementById("eventDate").value);
+  formData.append("location", document.getElementById("eventLocation").value);
+  formData.append("description", document.getElementById("eventDesc").value);
+  if(document.getElementById("eventImage").files[0]) {
+      formData.append("image", document.getElementById("eventImage").files[0]);
+  }
+
+  btn.textContent = "Adding...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API_URL}/events`, { method: "POST", body: formData, headers: getAuthHeaders() });
+    if (res.ok) {
+      document.getElementById("eventForm").reset();
+      fetchAdminEvents();
+    }
+  } catch (err) {
+    alert("Failed to add event");
+  } finally {
+    btn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Event`;
+    btn.disabled = false;
+  }
+});
+
+// =======================
 // 4. CLEANUP INVALID IMAGES
 // =======================
 async function cleanupFacebookCDN() {

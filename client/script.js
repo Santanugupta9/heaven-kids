@@ -272,7 +272,28 @@ async function fetchGallery() {
 }
 
 /* ==========================
-   📅 FETCH EVENTS
+   🖼️ FETCH ABOUT IMAGES
+========================== */
+async function fetchAboutImages() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/gallery`);
+    const images = await res.json();
+    
+    // Filter for 'About' category and take latest 4
+    const aboutImages = images.filter(img => img.category === 'About').slice(0, 4);
+
+    if (aboutImages.length > 0) document.getElementById('about-img-1').src = aboutImages[0].imageUrl;
+    if (aboutImages.length > 1) document.getElementById('about-img-2').src = aboutImages[1].imageUrl;
+    if (aboutImages.length > 2) document.getElementById('about-img-3').src = aboutImages[2].imageUrl;
+    if (aboutImages.length > 3) document.getElementById('about-img-4').src = aboutImages[3].imageUrl;
+
+  } catch (err) {
+    console.error("Error fetching about images:", err);
+  }
+}
+
+/* ==========================
+   � FETCH EVENTS
 ========================== */
 async function fetchEvents() {
   const container = document.getElementById("events-container");
@@ -330,4 +351,5 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchClasses();
     fetchGallery();
     fetchEvents();
+    fetchAboutImages();
 });

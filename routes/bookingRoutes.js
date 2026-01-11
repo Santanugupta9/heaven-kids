@@ -16,10 +16,17 @@ router.get("/", protect, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-
+  let booking;
   try {
-    const booking = await Booking.create(req.body);
+    // 1. Save Booking to Database
+    booking = await Booking.create(req.body);
+  } catch (dbError) {
+    console.error("❌ Database Error:", dbError);
+    return res.status(500).json({ success: false, error: "Database error" });
+  }
 
+  // 2. Send Email (Fail-safe)
+  try {
     // SendGrid Transport
     const transporter = nodemailer.createTransport({
       host: "smtp.sendgrid.net",
@@ -68,9 +75,10 @@ router.post("/", async (req, res) => {
     console.log("✅ Email sent successfully");
     res.json({ success: true });
 
-  } catch (err) {
-    console.error("❌ Booking Error:", err);
-    res.status(500).json({ success: false, error: err.message });
+  } catch (emailError) {
+    console.error("❌ Email Sending Error:", emailError);
+    // Return success because the booking was saved, even if email failed
+    res.json({ success: true, warning: "Booking saved but email failed. Check server logs." });
   }
 });
 

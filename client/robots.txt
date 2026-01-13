@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /admin.html
+Disallow: /admin-login.html
 Allow: /
 
 Sitemap: https://heavenkidsmontessori.edu.np/sitemap.xml

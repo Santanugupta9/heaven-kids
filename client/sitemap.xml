@@ -5,7 +5,39 @@
 
   <url>
     <loc>https://heavenkidsmontessori.edu.np/</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://heavenkidsmontessori.edu.np/about.html</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://heavenkidsmontessori.edu.np/classes.html</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://heavenkidsmontessori.edu.np/gallery.html</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heavenkidsmontessori.edu.np/events.html</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heavenkidsmontessori.edu.np/contact.html</loc>
+    <lastmod>2024-05-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>
